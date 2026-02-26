@@ -74,20 +74,20 @@ class ExcelMergerUI:
         frame_top = tk.Frame(self.root, bg=self.colors["bg_main"])
         frame_top.pack(fill="x", padx=20, pady=20)
 
-        self.frame_main = ttk.LabelFrame(frame_top, text=" 1. Excel Principal (Main) ", style="Card.TLabelframe")
+        self.frame_main = ttk.LabelFrame(frame_top, text=" 1. Main Excel ", style="Card.TLabelframe")
         self.frame_main.pack(side="left", fill="both", expand=True, padx=(0, 10), ipadx=5, ipady=5)
         
-        self.lbl_main = tk.Label(self.frame_main, text="Glissez l'Excel Main ici\n\nou", bg=self.colors["bg_drop"], fg=self.colors["fg_text"], font=("Helvetica", 11), width=30, height=4, relief="flat", cursor="hand2")
+        self.lbl_main = tk.Label(self.frame_main, text="Drag & Drop Main Excel here\n\nor", bg=self.colors["bg_drop"], fg=self.colors["fg_text"], font=("Helvetica", 11), width=30, height=4, relief="flat", cursor="hand2")
         self.lbl_main.pack(pady=(15, 5), padx=15, fill="x")
-        ttk.Button(self.frame_main, text="Parcourir...", command=self.load_main).pack(pady=(5, 10))
+        ttk.Button(self.frame_main, text="Browse...", command=self.load_main).pack(pady=(5, 10))
         tk.Label(self.frame_main, textvariable=self.main_path, bg=self.colors["bg_card"], fg=self.colors["fg_accent1"], font=("Helvetica", 9, "bold"), wraplength=300).pack(pady=5, padx=10)
 
-        self.frame_source = ttk.LabelFrame(frame_top, text=" 2. Excel à ajouter (Source) ", style="Card.TLabelframe")
+        self.frame_source = ttk.LabelFrame(frame_top, text=" 2. Excel to add (Source) ", style="Card.TLabelframe")
         self.frame_source.pack(side="right", fill="both", expand=True, padx=(10, 0), ipadx=5, ipady=5)
         
-        self.lbl_source = tk.Label(self.frame_source, text="Glissez l'Excel Source ici\n\nou", bg=self.colors["bg_drop"], fg=self.colors["fg_text"], font=("Helvetica", 11), width=30, height=4, relief="flat", cursor="hand2")
+        self.lbl_source = tk.Label(self.frame_source, text="Drag & Drop Source Excel here\n\nor", bg=self.colors["bg_drop"], fg=self.colors["fg_text"], font=("Helvetica", 11), width=30, height=4, relief="flat", cursor="hand2")
         self.lbl_source.pack(pady=(15, 5), padx=15, fill="x")
-        ttk.Button(self.frame_source, text="Parcourir...", command=self.load_source).pack(pady=(5, 10))
+        ttk.Button(self.frame_source, text="Browse...", command=self.load_source).pack(pady=(5, 10))
         tk.Label(self.frame_source, textvariable=self.source_path, bg=self.colors["bg_card"], fg=self.colors["fg_accent2"], font=("Helvetica", 9, "bold"), wraplength=300).pack(pady=5, padx=10)
 
         self.lbl_main.bind("<Button-1>", lambda e: self.load_main())
@@ -105,21 +105,21 @@ class ExcelMergerUI:
 
 
         # Mapping
-        self.frame_mapping = ttk.LabelFrame(self.root, text=" 3. Mapping des colonnes (Main - Source) ", style="Card.TLabelframe")
+        self.frame_mapping = ttk.LabelFrame(self.root, text=" 3. Column Mapping (Main - Source) ", style="Card.TLabelframe")
         self.frame_mapping.pack(fill="both", expand=True, padx=20, pady=5)
         
-        self.lbl_mapping_empty = tk.Label(self.frame_mapping, text="Sélectionnez d'abord les deux fichiers Excel ci-dessus.", bg=self.colors["bg_card"], fg="#6c7086", font=("Helvetica", 11, "italic"))
+        self.lbl_mapping_empty = tk.Label(self.frame_mapping, text="Please select both Excel files above first.", bg=self.colors["bg_card"], fg="#6c7086", font=("Helvetica", 11, "italic"))
         self.lbl_mapping_empty.pack(expand=True)
 
         # Merge
         frame_action = tk.Frame(self.root, bg=self.colors["bg_main"])
         frame_action.pack(fill="x", padx=20, pady=15)
         
-        self.btn_merge = ttk.Button(frame_action, text="FUSIONNER LES EXCEL", style="Success.TButton", state="disabled", command=self.process_merge)
+        self.btn_merge = ttk.Button(frame_action, text="MERGE EXCEL FILES", style="Success.TButton", state="disabled", command=self.process_merge)
         self.btn_merge.pack(pady=10, fill="x")
 
     def clean_path(self, path):
-        """Nettoie le chemin du fichier (enlève les accolades ajoutées par tkdnd sur Windows)"""
+        """Clean the file path (removes braces added by tkdnd on Windows)"""
         if path.startswith('{') and path.endswith('}'):
             return path[1:-1]
         return path
@@ -127,32 +127,32 @@ class ExcelMergerUI:
     def drop_main(self, event):
         filepath = self.clean_path(event.data)
         if filepath.lower().endswith(('.xlsx', '.xls')):
-            self.lbl_main.configure(bg=self.colors["bg_card"], text="Fichier Main chargé\nDrop à nouveau pour changer")
+            self.lbl_main.configure(bg=self.colors["bg_card"], text="Main File loaded\nDrop again to change")
             self.main_path.set(filepath)
             self.check_ready_for_mapping()
         else:
-            messagebox.showwarning("Erreur", "Veuillez glisser un fichier Excel (.xlsx ou .xls)")
+            messagebox.showwarning("Error", "Please drop an Excel file (.xlsx or .xls)")
 
     def drop_source(self, event):
         filepath = self.clean_path(event.data)
         if filepath.lower().endswith(('.xlsx', '.xls')):
-            self.lbl_source.configure(bg=self.colors["bg_card"], text="Fichier Source chargé\nDrop à nouveau pour changer")
+            self.lbl_source.configure(bg=self.colors["bg_card"], text="Source File loaded\nDrop again to change")
             self.source_path.set(filepath)
             self.check_ready_for_mapping()
         else:
-            messagebox.showwarning("Erreur", "Veuillez glisser un fichier Excel (.xlsx ou .xls)")
+            messagebox.showwarning("Error", "Please drop an Excel file (.xlsx or .xls)")
 
     def load_main(self):
-        filepath = filedialog.askopenfilename(filetypes=[("Fichiers Excel", "*.xlsx *.xls")])
+        filepath = filedialog.askopenfilename(filetypes=[("Excel Files", "*.xlsx *.xls")])
         if filepath:
-            self.lbl_main.configure(bg=self.colors["bg_card"], text="Fichier Main chargé\nCliquez pour changer")
+            self.lbl_main.configure(bg=self.colors["bg_card"], text="Main File loaded\nClick to change")
             self.main_path.set(filepath)
             self.check_ready_for_mapping()
 
     def load_source(self):
-        filepath = filedialog.askopenfilename(filetypes=[("Fichiers Excel", "*.xlsx *.xls")])
+        filepath = filedialog.askopenfilename(filetypes=[("Excel Files", "*.xlsx *.xls")])
         if filepath:
-            self.lbl_source.configure(bg=self.colors["bg_card"], text="Fichier Source chargé\nCliquez pour changer")
+            self.lbl_source.configure(bg=self.colors["bg_card"], text="Source File loaded\nClick to change")
             self.source_path.set(filepath)
             self.check_ready_for_mapping()
 
@@ -170,7 +170,7 @@ class ExcelMergerUI:
             main_cols = logic.get_excel_columns(self.main_path.get())
             source_cols = logic.get_excel_columns(self.source_path.get())
             
-            options = ["Ignorer"] + source_cols
+            options = ["Ignore"] + source_cols
 
             canvas = tk.Canvas(self.frame_mapping, borderwidth=0, highlightthickness=0, bg=self.colors["bg_card"])
             scrollbar = ttk.Scrollbar(self.frame_mapping, orient="vertical", command=canvas.yview)
@@ -189,8 +189,8 @@ class ExcelMergerUI:
             canvas.pack(side="left", fill="both", expand=True, padx=5, pady=5)
             scrollbar.pack(side="right", fill="y")
 
-            tk.Label(scrollable_frame, text="Colonne de destination (Main)", font=("Helvetica", 10, "bold", "underline"), bg=self.colors["bg_card"], fg=self.colors["fg_accent1"]).grid(row=0, column=0, sticky="e", pady=(10, 15), padx=10)
-            tk.Label(scrollable_frame, text="Valeur à importer (Source)", font=("Helvetica", 10, "bold", "underline"), bg=self.colors["bg_card"], fg=self.colors["fg_accent2"]).grid(row=0, column=1, sticky="w", pady=(10, 15), padx=10)
+            tk.Label(scrollable_frame, text="Destination Column (Main)", font=("Helvetica", 10, "bold", "underline"), bg=self.colors["bg_card"], fg=self.colors["fg_accent1"]).grid(row=0, column=0, sticky="e", pady=(10, 15), padx=10)
+            tk.Label(scrollable_frame, text="Value to Import (Source)", font=("Helvetica", 10, "bold", "underline"), bg=self.colors["bg_card"], fg=self.colors["fg_accent2"]).grid(row=0, column=1, sticky="w", pady=(10, 15), padx=10)
 
             for i, main_col in enumerate(main_cols, start=1):
                 tk.Label(scrollable_frame, text=f"{main_col}", font=("Helvetica", 10, "bold"), bg=self.colors["bg_card"], fg=self.colors["fg_text"]).grid(row=i, column=0, sticky="e", pady=6, padx=10)
@@ -199,26 +199,26 @@ class ExcelMergerUI:
                 if main_col in source_cols:
                     cb.set(main_col)
                 else:
-                    cb.set("Ignorer")
+                    cb.set("Ignore")
                     
                 cb.grid(row=i, column=1, sticky="w", pady=6, padx=10)
                 self.mapping_widgets[main_col] = cb
 
         except Exception as e:
-            messagebox.showerror("Erreur", f"Impossible de lire les colonnes.\n{e}")
+            messagebox.showerror("Error", f"Could not read columns.\n{e}")
 
     def process_merge(self):
         mapping_dict = {}
         for main_col, combobox in self.mapping_widgets.items():
             mapping_dict[main_col] = combobox.get()
 
-        output_path = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel files", "*.xlsx")], initialfile="Excel_Fusionne.xlsx")
+        output_path = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel files", "*.xlsx")], initialfile="Merged_Excel.xlsx")
         
         if not output_path:
             return 
 
         try:
             logic.merge_files(self.main_path.get(), self.source_path.get(), mapping_dict, output_path)
-            messagebox.showinfo("Succès", "Les fichiers ont été fusionnés avec succès !")
+            messagebox.showinfo("Success", "The files were merged successfully!")
         except Exception as e:
-            messagebox.showerror("Erreur", f"Une erreur s'est produite lors de la fusion :\n{e}")
+            messagebox.showerror("Error", f"An error occurred during merging:\n{e}")
