@@ -17,7 +17,7 @@ def merge_files(main_path, source_path, mapping_dict, output_path):
     df_main = pd.read_excel(main_path)
     df_source = pd.read_excel(source_path)
 
-    rename_dict = {source_col: main_col for main_col, source_col in mapping_dict.items() if source_col != "Ignor"}
+    rename_dict = {source_col: main_col for main_col, source_col in mapping_dict.items() if source_col not in ["Ignor", "Ignorer", "Ignore"]}
     
     columns_to_keep = list(rename_dict.keys())
     df_source_filtered = df_source[columns_to_keep].copy()
