@@ -8,7 +8,7 @@ Requirements :
 pip install -r requirements.txt
 ```
 
-Launch the app :
+Start the app :
 ```
 python app.py
 ```
