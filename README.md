@@ -14,7 +14,9 @@ python app.py
 ```
 
 
-Sinon lancer Fuex.exe dans dist/fuex.exe
+
+
+**Or you can just start the app with Fuex.exe (in dist/fuex.exe)**
 
 ## Project structure
 ```
